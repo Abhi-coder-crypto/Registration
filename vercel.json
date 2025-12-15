@@ -2,7 +2,7 @@
   "version": 2,
   "builds": [
     {
-      "src": "api/*.js",
+      "src": "api/**/*.js",
       "use": "@vercel/node"
     },
     {
@@ -12,20 +12,8 @@
   ],
   "routes": [
     {
-      "src": "/api/register",
-      "dest": "/api/register.js"
-    },
-    {
-      "src": "/api/adminLogin",
-      "dest": "/api/adminLogin.js"
-    },
-    {
-      "src": "/api/getRegistrations",
-      "dest": "/api/getRegistrations.js"
-    },
-    {
-      "src": "/api/exportExcel",
-      "dest": "/api/exportExcel.js"
+      "src": "/api/(.*)",
+      "dest": "/api/$1.js"
     },
     {
       "src": "/(.*)",
