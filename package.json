@@ -1,0 +1,9 @@
+{
+  "name": "REGISTRATION",
+  "version": "1.0.0",
+  "description": "ECG Summit Registration",
+  "dependencies": {
+    "mongodb": "^6.3.0",
+    "jsonwebtoken": "^9.0.2"
+  }
+}

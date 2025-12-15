@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Register To Enter</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background: #f5f5f5;
+    }
+
+    .container {
+      display: flex;
+      height: 100vh;
+      max-width: 100%;
+      margin: 0 auto;
+      background: white;
+      overflow: hidden;
+    }
+
+    .left {
+      flex: 0 0 55%;
+      background: #e8f0f5;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 30px;
+      overflow: hidden;
+    }
+
+    .left img {
+      max-width: 600px;
+      max-height: 95vh;
+      width: 100%;
+      height: auto;
+      object-fit: contain;
+    }
+
+    .right {
+      flex: 0 0 45%;
+      padding: 40px 50px;
+      background: white;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      overflow-y: auto;
+    }
+
+    h2 {
+      font-size: 28px;
+      margin-bottom: 25px;
+      color: #333;
+    }
+
+    #regForm {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    input, select {
+      padding: 10px 12px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 14px;
+      transition: border-color 0.3s;
+    }
+
+    input:focus, select:focus {
+      outline: none;
+      border-color: #667eea;
+    }
+
+    button {
+      padding: 12px;
+      background: #333;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      font-size: 15px;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 8px;
+      transition: background 0.3s;
+    }
+
+    button:hover {
+      background: #555;
+    }
+
+    .success-message {
+      padding: 12px;
+      background: #d4edda;
+      color: #155724;
+      border: 1px solid #c3e6cb;
+      border-radius: 4px;
+      margin-top: 12px;
+      display: none;
+      font-size: 14px;
+    }
+
+    @media (max-width: 968px) {
+      .container {
+        flex-direction: column;
+      }
+
+      .left {
+        min-height: 300px;
+      }
+
+      .right {
+        flex: 1;
+        padding: 40px 30px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .right {
+        padding: 30px 20px;
+      }
+
+      h2 {
+        font-size: 26px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="left">
+      <img src="../images/banner.jpg" alt="National Pulmonary Hypertension Symposium">
+    </div>
+
+    <div class="right">
+      <h2>Register To Enter</h2>
+      <form id="regForm">
+        <input type="text" name="name" placeholder="Doctor Name*" required>
+        <input type="email" name="email" placeholder="Email*" required>
+        <input type="tel" name="mobile" placeholder="Mobile*" required>
+        <input type="text" name="speciality" placeholder="Speciality*" required>
+        <input type="text" name="state" placeholder="State*" required>
+        <input type="text" name="city" placeholder="City">
+        <button type="submit">REGISTER</button>
+      </form>
+      <div class="success-message" id="successMsg">
+        Registration successful! Thank you for registering.
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById('regForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      const formData = {
+        name: this.name.value,
+        email: this.email.value,
+        mobile: this.mobile.value,
+        speciality: this.speciality.value,
+        state: this.state.value,
+        city: this.city.value
+      };
+      
+      console.log('Form submitted:', formData);
+      
+      // Show success message
+      document.getElementById('successMsg').style.display = 'block';
+      
+      // Reset form
+      this.reset();
+      
+      // Hide success message after 3 seconds
+      setTimeout(() => {
+        document.getElementById('successMsg').style.display = 'none';
+      }, 3000);
+    });
+  </script>
+</body>
+</html>
