@@ -9,6 +9,12 @@ A registration system for the National Pulmonary Hypertension Symposium. Support
 - **Backend (Vercel)**: Serverless functions in `api/`
 - **Database**: MongoDB (requires `MONGO_URI` environment variable)
 
+## Recent Changes (Dec 15, 2025)
+- Added duplicate email/mobile prevention with user-friendly alerts
+- Added double-click prevention on registration button
+- Made website mobile responsive (scrollable on mobile, fixed on desktop)
+- Changed admin export from CSV to Excel format (.xlsx)
+
 ## Pages
 - `/` or `/index.html` - User registration form
 - `/admin-login.html` - Admin login page
