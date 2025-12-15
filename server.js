@@ -24,7 +24,7 @@ async function getDb() {
   return mongoClient.db('registration');
 }
 
-app.post('/.netlify/functions/register', async (req, res) => {
+app.post('/api/register', async (req, res) => {
   try {
     const db = await getDb();
     await db.collection('registrations').insertOne({
@@ -38,7 +38,7 @@ app.post('/.netlify/functions/register', async (req, res) => {
   }
 });
 
-app.post('/.netlify/functions/adminLogin', async (req, res) => {
+app.post('/api/adminLogin', async (req, res) => {
   try {
     const { email, password } = req.body;
     
@@ -57,7 +57,7 @@ app.post('/.netlify/functions/adminLogin', async (req, res) => {
   }
 });
 
-app.get('/.netlify/functions/getRegistrations', async (req, res) => {
+app.get('/api/getRegistrations', async (req, res) => {
   try {
     const authHeader = req.headers.authorization;
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
@@ -76,16 +76,16 @@ app.get('/.netlify/functions/getRegistrations', async (req, res) => {
   }
 });
 
-app.get('/.netlify/functions/exportExcel', async (req, res) => {
+app.get('/api/exportExcel', async (req, res) => {
   try {
     jwt.verify(req.query.token, process.env.JWT_SECRET || 'default-secret');
     
     const db = await getDb();
     const data = await db.collection('registrations').find().toArray();
     
-    let csv = 'Name,Email,Mobile,Speciality,State,City\n';
+    let csv = 'Name,Email,Mobile,Speciality,State,City,Created At\n';
     data.forEach(r => {
-      csv += `"${r.name || ''}","${r.email || ''}","${r.mobile || ''}","${r.speciality || ''}","${r.state || ''}","${r.city || ''}"\n`;
+      csv += `"${r.name || ''}","${r.email || ''}","${r.mobile || ''}","${r.speciality || ''}","${r.state || ''}","${r.city || ''}","${r.createdAt || ''}"\n`;
     });
     
     res.set({
@@ -97,10 +97,6 @@ app.get('/.netlify/functions/exportExcel', async (req, res) => {
     console.error('Export error:', error);
     res.status(401).json({ error: 'Unauthorized' });
   }
-});
-
-app.use((req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
 app.listen(PORT, '0.0.0.0', () => {
