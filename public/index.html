@@ -1,227 +1,260 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Register To Enter</title>
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Register To Enter</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
 
-    html, body {
-      height: 100%;
-      overflow: hidden;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: #f8f9fa;
-    }
+      html,
+      body {
+        height: 100%;
+        overflow: hidden;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: #f8f9fa;
+      }
 
-    .container {
-      display: flex;
-      height: 100vh;
-      width: 100%;
-    }
-
-    .left {
-      flex: 0 0 60%;
-      height: 100%;
-    }
-
-    .left img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      object-position: center;
-      display: block;
-    }
-
-    .right {
-      flex: 0 0 40%;
-      padding: 30px 40px;
-      background: white;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-    }
-
-    h2 {
-      font-size: 22px;
-      margin-bottom: 18px;
-      color: #333;
-      font-weight: 600;
-    }
-
-    #regForm {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-
-    input, select {
-      padding: 12px 14px;
-      border: 1px solid #ddd;
-      border-radius: 6px;
-      font-size: 14px;
-      transition: border-color 0.3s, box-shadow 0.3s;
-      background: white;
-    }
-
-    input:focus, select:focus {
-      outline: none;
-      border-color: #0d6efd;
-      box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.1);
-    }
-
-    input::placeholder {
-      color: #999;
-    }
-
-    select {
-      color: #333;
-      cursor: pointer;
-      appearance: none;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23999' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
-      background-repeat: no-repeat;
-      background-position: right 15px center;
-      padding-right: 40px;
-    }
-
-    button[type="submit"] {
-      padding: 12px;
-      background: #0d6efd;
-      color: white;
-      border: none;
-      border-radius: 6px;
-      font-size: 15px;
-      font-weight: 600;
-      cursor: pointer;
-      margin-top: 5px;
-      transition: background 0.3s;
-    }
-
-    button[type="submit"]:hover {
-      background: #0b5ed7;
-    }
-
-    .success-message {
-      padding: 12px;
-      background: #d1e7dd;
-      color: #0f5132;
-      border: 1px solid #badbcc;
-      border-radius: 6px;
-      margin-top: 12px;
-      display: none;
-      font-size: 14px;
-      text-align: center;
-    }
-
-    @media (max-width: 768px) {
       .container {
-        flex-direction: column;
+        display: flex;
+        height: 100vh;
+        width: 100%;
       }
-      .left {
-        flex: 0 0 45%;
-      }
-      .right {
-        flex: 0 0 55%;
-        padding: 20px;
-      }
-      #regForm {
-        gap: 10px;
-      }
-      input, select {
-        padding: 10px 12px;
-      }
-    }
-  </style>
-</head>
-<body>
-  <div class="container">
-    <div class="left">
-      <img src="/images/banner.jpg" alt="National Pulmonary Hypertension Symposium">
-    </div>
 
-    <div class="right">
-      <h2>Register To Enter</h2>
-      <form id="regForm">
-        <input type="text" name="name" placeholder="Enter Dr Name*" required>
-        <input type="email" name="email" placeholder="Enter Email Id*" required>
-        <input type="tel" name="mobile" placeholder="Enter Mobile *" required>
-        <select name="speciality" required>
-          <option value="">Select Speciality *</option>
-          <option value="Pulmonology">Pulmonology</option>
-          <option value="Cardiology">Cardiology</option>
-          <option value="Internal Medicine">Internal Medicine</option>
-          <option value="General Medicine">General Medicine</option>
-          <option value="Critical Care">Critical Care</option>
-          <option value="Rheumatology">Rheumatology</option>
-          <option value="Other">Other</option>
-        </select>
-        <select name="state" required>
-          <option value="">Select State *</option>
-          <option value="Andhra Pradesh">Andhra Pradesh</option>
-          <option value="Bihar">Bihar</option>
-          <option value="Delhi">Delhi</option>
-          <option value="Gujarat">Gujarat</option>
-          <option value="Karnataka">Karnataka</option>
-          <option value="Kerala">Kerala</option>
-          <option value="Madhya Pradesh">Madhya Pradesh</option>
-          <option value="Maharashtra">Maharashtra</option>
-          <option value="Punjab">Punjab</option>
-          <option value="Rajasthan">Rajasthan</option>
-          <option value="Tamil Nadu">Tamil Nadu</option>
-          <option value="Telangana">Telangana</option>
-          <option value="Uttar Pradesh">Uttar Pradesh</option>
-          <option value="West Bengal">West Bengal</option>
-          <option value="Other">Other</option>
-        </select>
-        <input type="text" name="city" placeholder="Enter City">
-        <button type="submit">REGISTER</button>
-      </form>
-      <div class="success-message" id="successMsg">
-        Registration successful! Thank you for registering.
+      .left {
+        flex: 0 0 60%;
+        height: 100%;
+      }
+
+      .left img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center;
+        display: block;
+      }
+
+      .right {
+        flex: 0 0 40%;
+        padding: 30px 40px;
+        background: white;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+      }
+
+      h2 {
+        font-size: 22px;
+        margin-bottom: 18px;
+        color: #333;
+        font-weight: 600;
+      }
+
+      #regForm {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+
+      input,
+      select {
+        padding: 12px 14px;
+        border: 1px solid #ddd;
+        border-radius: 6px;
+        font-size: 14px;
+        transition:
+          border-color 0.3s,
+          box-shadow 0.3s;
+        background: white;
+      }
+
+      input:focus,
+      select:focus {
+        outline: none;
+        border-color: #0d6efd;
+        box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.1);
+      }
+
+      input::placeholder {
+        color: #999;
+      }
+
+      select {
+        color: #333;
+        cursor: pointer;
+        appearance: none;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23999' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 15px center;
+        padding-right: 40px;
+      }
+
+      button[type="submit"] {
+        padding: 12px;
+        background: #0d6efd;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        font-size: 15px;
+        font-weight: 600;
+        cursor: pointer;
+        margin-top: 5px;
+        transition: background 0.3s;
+      }
+
+      button[type="submit"]:hover {
+        background: #0b5ed7;
+      }
+
+      .success-message {
+        padding: 12px;
+        background: #d1e7dd;
+        color: #0f5132;
+        border: 1px solid #badbcc;
+        border-radius: 6px;
+        margin-top: 12px;
+        display: none;
+        font-size: 14px;
+        text-align: center;
+      }
+
+      @media (max-width: 768px) {
+        .container {
+          flex-direction: column;
+        }
+        .left {
+          flex: 0 0 45%;
+        }
+        .right {
+          flex: 0 0 55%;
+          padding: 20px;
+        }
+        #regForm {
+          gap: 10px;
+        }
+        input,
+        select {
+          padding: 10px 12px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="left">
+        <img
+          src="/images/banner.jpg"
+          alt="National Pulmonary Hypertension Symposium"
+        />
+      </div>
+
+      <div class="right">
+        <h2>Register To Enter</h2>
+        <form id="regForm">
+          <input
+            type="text"
+            name="name"
+            placeholder="Enter Dr Name*"
+            required
+          />
+          <input
+            type="email"
+            name="email"
+            placeholder="Enter Email Id*"
+            required
+            pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}"
+            title="Please enter a valid email address (e.g., example@domain.com)"
+          />
+          <input
+            type="tel"
+            name="mobile"
+            placeholder="Enter Mobile *"
+            required
+            pattern="[0-9]{10}"
+            maxlength="10"
+            title="Please enter exactly 10 digits"
+          />
+          <select name="speciality" required>
+            <option value="">Select Speciality *</option>
+            <option value="Pulmonology">Cardio</option>
+            <option value="Cardiology">CP</option>
+            <option value="Internal Medicine">Diabeto</option>
+            <option value="General Medicine">GP</option>
+            <option value="Other">Other</option>
+          </select>
+          <select name="state" required>
+            <option value="">Select State *</option>
+            <option value="Andhra Pradesh">Andhra Pradesh</option>
+            <option value="Bihar">Bihar</option>
+            <option value="Delhi">Delhi</option>
+            <option value="Gujarat">Gujarat</option>
+            <option value="Karnataka">Karnataka</option>
+            <option value="Kerala">Kerala</option>
+            <option value="Madhya Pradesh">Madhya Pradesh</option>
+            <option value="Maharashtra">Maharashtra</option>
+            <option value="Punjab">Punjab</option>
+            <option value="Rajasthan">Rajasthan</option>
+            <option value="Tamil Nadu">Tamil Nadu</option>
+            <option value="Telangana">Telangana</option>
+            <option value="Uttar Pradesh">Uttar Pradesh</option>
+            <option value="West Bengal">West Bengal</option>
+            <option value="Other">Other</option>
+          </select>
+          <input type="text" name="city" placeholder="Enter City" />
+          <button type="submit">REGISTER</button>
+        </form>
+        <div class="success-message" id="successMsg">
+          Registration successful! Thank you for registering.
+        </div>
       </div>
     </div>
-  </div>
 
-  <script>
-    document.getElementById('regForm').addEventListener('submit', async function(e) {
-      e.preventDefault();
-      
-      const formData = {
-        name: this.name.value,
-        email: this.email.value,
-        mobile: this.mobile.value,
-        speciality: this.speciality.value,
-        state: this.state.value,
-        city: this.city.value
-      };
-      
-      try {
-        const res = await fetch('/api/register', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(formData)
+    <script>
+      document
+        .getElementById("regForm")
+        .addEventListener("submit", async function (e) {
+          e.preventDefault();
+
+          // Get current timestamp in ISO format
+          const timestamp = new Date().toISOString();
+
+          const formData = {
+            name: this.name.value,
+            email: this.email.value,
+            mobile: this.mobile.value,
+            speciality: this.speciality.value,
+            state: this.state.value,
+            city: this.city.value,
+            timestamp: timestamp  // Add timestamp to form data
+          };
+
+          try {
+            const res = await fetch("/api/register", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(formData),
+            });
+
+            const result = await res.json();
+
+            if (result.success) {
+              document.getElementById("successMsg").style.display = "block";
+              this.reset();
+              setTimeout(() => {
+                document.getElementById("successMsg").style.display = "none";
+              }, 3000);
+            } else {
+              alert("Registration failed. Please try again.");
+            }
+          } catch (error) {
+            console.error("Error:", error);
+            alert("Registration failed. Please try again.");
+          }
         });
-        
-        const result = await res.json();
-        
-        if (result.success) {
-          document.getElementById('successMsg').style.display = 'block';
-          this.reset();
-          setTimeout(() => {
-            document.getElementById('successMsg').style.display = 'none';
-          }, 3000);
-        } else {
-          alert('Registration failed. Please try again.');
-        }
-      } catch (error) {
-        console.error('Error:', error);
-        alert('Registration failed. Please try again.');
-      }
-    });
-  </script>
-</body>
+    </script>
+  </body>
 </html>
