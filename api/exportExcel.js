@@ -5,7 +5,7 @@ module.exports = async (req, res) => {
   try {
     jwt.verify(req.query.token, process.env.JWT_SECRET || 'default-secret');
     
-    const client = new MongoClient(process.env.MONGO_URI);
+    const client = new MongoClient(process.env.MONGODB_URI || process.env.MONGO_URI);
     await client.connect();
     
     const data = await client

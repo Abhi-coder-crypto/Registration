@@ -6,7 +6,7 @@ module.exports = async (req, res) => {
   }
 
   try {
-    const client = new MongoClient(process.env.MONGO_URI);
+    const client = new MongoClient(process.env.MONGODB_URI || process.env.MONGO_URI);
     await client.connect();
 
     await client

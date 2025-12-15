@@ -17,8 +17,12 @@ app.use((req, res, next) => {
 let mongoClient;
 
 async function getDb() {
+  const mongoUri = process.env.MONGODB_URI || process.env.MONGO_URI;
+  if (!mongoUri) {
+    return null;
+  }
   if (!mongoClient) {
-    mongoClient = new MongoClient(process.env.MONGO_URI);
+    mongoClient = new MongoClient(mongoUri);
     await mongoClient.connect();
   }
   return mongoClient.db('registration');
@@ -27,6 +31,10 @@ async function getDb() {
 app.post('/api/register', async (req, res) => {
   try {
     const db = await getDb();
+    if (!db) {
+      console.log('MongoDB not configured - registration data:', req.body);
+      return res.json({ success: true, message: 'Demo mode - MongoDB not configured' });
+    }
     await db.collection('registrations').insertOne({
       ...req.body,
       createdAt: new Date()
@@ -68,11 +76,17 @@ app.get('/api/getRegistrations', async (req, res) => {
     jwt.verify(token, process.env.JWT_SECRET || 'default-secret');
     
     const db = await getDb();
+    if (!db) {
+      return res.json([]);
+    }
     const data = await db.collection('registrations').find().toArray();
     res.json(data);
   } catch (error) {
+    if (error.name === 'JsonWebTokenError' || error.name === 'TokenExpiredError') {
+      return res.status(401).json({ error: 'Unauthorized' });
+    }
     console.error('Get registrations error:', error);
-    res.status(401).json({ error: 'Unauthorized' });
+    res.status(500).json({ error: 'Server error' });
   }
 });
 
@@ -81,6 +95,13 @@ app.get('/api/exportExcel', async (req, res) => {
     jwt.verify(req.query.token, process.env.JWT_SECRET || 'default-secret');
     
     const db = await getDb();
+    if (!db) {
+      res.set({
+        'Content-Type': 'text/csv',
+        'Content-Disposition': 'attachment; filename=registrations.csv'
+      });
+      return res.send('Name,Email,Mobile,Speciality,State,City,Created At\n');
+    }
     const data = await db.collection('registrations').find().toArray();
     
     let csv = 'Name,Email,Mobile,Speciality,State,City,Created At\n';
@@ -101,4 +122,7 @@ app.get('/api/exportExcel', async (req, res) => {
 
 app.listen(PORT, '0.0.0.0', () => {
   console.log(`Server running on http://0.0.0.0:${PORT}`);
+  if (!process.env.MONGODB_URI && !process.env.MONGO_URI) {
+    console.log('Warning: MONGODB_URI not set - running in demo mode');
+  }
 });
