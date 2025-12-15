@@ -20,7 +20,6 @@ async function connectToDatabase() {
 }
 
 module.exports = async (req, res) => {
-  // Set CORS headers for Vercel
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
@@ -35,14 +34,34 @@ module.exports = async (req, res) => {
 
   try {
     const client = await connectToDatabase();
-
-    await client
-      .db("registration")
-      .collection("registrations")
-      .insertOne({
-        ...req.body,
-        createdAt: new Date()
+    const collection = client.db("registration").collection("registrations");
+    
+    const { email, mobile } = req.body;
+    
+    // Check for duplicate email
+    const existingEmail = await collection.findOne({ email: email });
+    if (existingEmail) {
+      return res.status(400).json({ 
+        success: false, 
+        error: 'duplicate_email',
+        message: 'This email is already registered.' 
       });
+    }
+    
+    // Check for duplicate mobile
+    const existingMobile = await collection.findOne({ mobile: mobile });
+    if (existingMobile) {
+      return res.status(400).json({ 
+        success: false, 
+        error: 'duplicate_mobile',
+        message: 'This mobile number is already registered.' 
+      });
+    }
+
+    await collection.insertOne({
+      ...req.body,
+      createdAt: new Date()
+    });
 
     return res.status(200).json({ success: true });
   } catch (error) {

@@ -14,20 +14,21 @@
       html,
       body {
         height: 100%;
-        overflow: hidden;
         font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
         background: #f8f9fa;
       }
 
       .container {
         display: flex;
-        height: 100vh;
+        min-height: 100vh;
         width: 100%;
       }
 
       .left {
         flex: 0 0 60%;
-        height: 100%;
+        height: 100vh;
+        position: sticky;
+        top: 0;
       }
 
       .left img {
@@ -45,6 +46,7 @@
         display: flex;
         flex-direction: column;
         justify-content: center;
+        min-height: 100vh;
       }
 
       h2 {
@@ -110,6 +112,11 @@
         background: #0b5ed7;
       }
 
+      button[type="submit"]:disabled {
+        background: #6c757d;
+        cursor: not-allowed;
+      }
+
       .success-message {
         padding: 12px;
         background: #d1e7dd;
@@ -122,15 +129,56 @@
         text-align: center;
       }
 
+      .error-message {
+        padding: 12px;
+        background: #f8d7da;
+        color: #842029;
+        border: 1px solid #f5c2c7;
+        border-radius: 6px;
+        margin-top: 12px;
+        display: none;
+        font-size: 14px;
+        text-align: center;
+      }
+
+      /* Desktop view - both sections visible without scroll */
+      @media (min-width: 769px) {
+        html, body {
+          overflow: hidden;
+        }
+        .container {
+          height: 100vh;
+          overflow: hidden;
+        }
+        .left, .right {
+          height: 100vh;
+          overflow: hidden;
+        }
+      }
+
+      /* Mobile view - scrollable */
       @media (max-width: 768px) {
+        html, body {
+          height: auto;
+          overflow-y: auto;
+        }
         .container {
           flex-direction: column;
+          min-height: auto;
         }
         .left {
-          flex: 0 0 45%;
+          flex: none;
+          height: auto;
+          max-height: 50vh;
+          position: relative;
+        }
+        .left img {
+          height: auto;
+          max-height: 50vh;
         }
         .right {
-          flex: 0 0 55%;
+          flex: none;
+          min-height: auto;
           padding: 20px;
         }
         #regForm {
@@ -204,21 +252,39 @@
             <option value="Other">Other</option>
           </select>
           <input type="text" name="city" placeholder="Enter City" />
-          <button type="submit">REGISTER</button>
+          <button type="submit" id="submitBtn">REGISTER</button>
         </form>
         <div class="success-message" id="successMsg">
           Registration successful! Thank you for registering.
         </div>
+        <div class="error-message" id="errorMsg"></div>
       </div>
     </div>
 
     <script>
+      let isSubmitting = false;
+      
       document
         .getElementById("regForm")
         .addEventListener("submit", async function (e) {
           e.preventDefault();
+          
+          // Prevent double submission
+          if (isSubmitting) {
+            return;
+          }
+          
+          const submitBtn = document.getElementById("submitBtn");
+          const successMsg = document.getElementById("successMsg");
+          const errorMsg = document.getElementById("errorMsg");
+          
+          // Disable button and set submitting state
+          isSubmitting = true;
+          submitBtn.disabled = true;
+          submitBtn.textContent = "REGISTERING...";
+          successMsg.style.display = "none";
+          errorMsg.style.display = "none";
 
-          // Get current timestamp in ISO format
           const timestamp = new Date().toISOString();
 
           const formData = {
@@ -228,7 +294,7 @@
             speciality: this.speciality.value,
             state: this.state.value,
             city: this.city.value,
-            timestamp: timestamp  // Add timestamp to form data
+            timestamp: timestamp
           };
 
           try {
@@ -241,17 +307,31 @@
             const result = await res.json();
 
             if (result.success) {
-              document.getElementById("successMsg").style.display = "block";
+              successMsg.style.display = "block";
               this.reset();
               setTimeout(() => {
-                document.getElementById("successMsg").style.display = "none";
-              }, 3000);
+                successMsg.style.display = "none";
+              }, 5000);
             } else {
-              alert("Registration failed. Please try again.");
+              // Show specific error message
+              if (result.error === 'duplicate_email') {
+                errorMsg.textContent = "This email is already registered. Please use a different email.";
+              } else if (result.error === 'duplicate_mobile') {
+                errorMsg.textContent = "This mobile number is already registered. Please use a different number.";
+              } else {
+                errorMsg.textContent = result.message || "Registration failed. Please try again.";
+              }
+              errorMsg.style.display = "block";
             }
           } catch (error) {
             console.error("Error:", error);
-            alert("Registration failed. Please try again.");
+            errorMsg.textContent = "Registration failed. Please try again.";
+            errorMsg.style.display = "block";
+          } finally {
+            // Re-enable button
+            isSubmitting = false;
+            submitBtn.disabled = false;
+            submitBtn.textContent = "REGISTER";
           }
         });
     </script>

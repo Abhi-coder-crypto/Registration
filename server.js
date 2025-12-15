@@ -2,6 +2,7 @@ const express = require('express');
 const path = require('path');
 const { MongoClient } = require('mongodb');
 const jwt = require('jsonwebtoken');
+const XLSX = require('xlsx');
 
 const app = express();
 const PORT = 5000;
@@ -35,7 +36,31 @@ app.post('/api/register', async (req, res) => {
       console.log('MongoDB not configured - registration data:', req.body);
       return res.json({ success: true, message: 'Demo mode - MongoDB not configured' });
     }
-    await db.collection('registrations').insertOne({
+    
+    const { email, mobile } = req.body;
+    const collection = db.collection('registrations');
+    
+    // Check for duplicate email
+    const existingEmail = await collection.findOne({ email: email });
+    if (existingEmail) {
+      return res.status(400).json({ 
+        success: false, 
+        error: 'duplicate_email',
+        message: 'This email is already registered.' 
+      });
+    }
+    
+    // Check for duplicate mobile
+    const existingMobile = await collection.findOne({ mobile: mobile });
+    if (existingMobile) {
+      return res.status(400).json({ 
+        success: false, 
+        error: 'duplicate_mobile',
+        message: 'This mobile number is already registered.' 
+      });
+    }
+    
+    await collection.insertOne({
       ...req.body,
       createdAt: new Date()
     });
@@ -96,24 +121,42 @@ app.get('/api/exportExcel', async (req, res) => {
     
     const db = await getDb();
     if (!db) {
+      const workbook = XLSX.utils.book_new();
+      const worksheet = XLSX.utils.json_to_sheet([]);
+      XLSX.utils.book_append_sheet(workbook, worksheet, 'Registrations');
+      const buffer = XLSX.write(workbook, { type: 'buffer', bookType: 'xlsx' });
       res.set({
-        'Content-Type': 'text/csv',
-        'Content-Disposition': 'attachment; filename=registrations.csv'
+        'Content-Type': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        'Content-Disposition': 'attachment; filename=registrations.xlsx'
       });
-      return res.send('Name,Email,Mobile,Speciality,State,City,Created At\n');
+      return res.send(buffer);
     }
     const data = await db.collection('registrations').find().toArray();
     
-    let csv = 'Name,Email,Mobile,Speciality,State,City,Created At\n';
-    data.forEach(r => {
-      csv += `"${r.name || ''}","${r.email || ''}","${r.mobile || ''}","${r.speciality || ''}","${r.state || ''}","${r.city || ''}","${r.createdAt || ''}"\n`;
-    });
+    const excelData = data.map(r => ({
+      'Date & Time': r.timestamp ? new Date(r.timestamp).toLocaleString() : (r.createdAt ? new Date(r.createdAt).toLocaleString() : ''),
+      'Name': r.name || '',
+      'Email': r.email || '',
+      'Mobile': r.mobile || '',
+      'Speciality': r.speciality || '',
+      'State': r.state || '',
+      'City': r.city || ''
+    }));
+    
+    const workbook = XLSX.utils.book_new();
+    const worksheet = XLSX.utils.json_to_sheet(excelData);
+    worksheet['!cols'] = [
+      { wch: 20 }, { wch: 25 }, { wch: 30 }, { wch: 15 }, { wch: 20 }, { wch: 15 }, { wch: 15 }
+    ];
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Registrations');
+    
+    const buffer = XLSX.write(workbook, { type: 'buffer', bookType: 'xlsx' });
     
     res.set({
-      'Content-Type': 'text/csv',
-      'Content-Disposition': 'attachment; filename=registrations.csv'
+      'Content-Type': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+      'Content-Disposition': 'attachment; filename=registrations.xlsx'
     });
-    res.send(csv);
+    res.send(buffer);
   } catch (error) {
     console.error('Export error:', error);
     res.status(401).json({ error: 'Unauthorized' });
