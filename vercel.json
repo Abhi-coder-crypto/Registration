@@ -12,12 +12,36 @@
   ],
   "routes": [
     {
-      "src": "/api/(.*)",
-      "dest": "/api/$1.js"
+      "src": "/api/register",
+      "dest": "api/register.js"
+    },
+    {
+      "src": "/api/adminLogin",
+      "dest": "api/adminLogin.js"
+    },
+    {
+      "src": "/api/getRegistrations",
+      "dest": "api/getRegistrations.js"
+    },
+    {
+      "src": "/api/exportExcel",
+      "dest": "api/exportExcel.js"
+    },
+    {
+      "src": "/images/(.*)",
+      "dest": "public/images/$1"
+    },
+    {
+      "src": "/(.*\\.html)",
+      "dest": "public/$1"
+    },
+    {
+      "src": "/",
+      "dest": "public/index.html"
     },
     {
       "src": "/(.*)",
-      "dest": "/public/$1"
+      "dest": "public/$1"
     }
   ]
 }
